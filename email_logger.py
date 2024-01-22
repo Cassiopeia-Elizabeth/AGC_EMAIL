@@ -122,9 +122,9 @@ def logging_stuff():
                 e_send.write("\n")
 
         if fault_counter > 0:
-            print(fault_counter)
+            #print(fault_counter)
             #print(attempt_counter)
-            #email_send() #Hash this out if you dont want to get emails while fault finding.
+            email_send() #Hash this out if you dont want to get emails while fault finding.
     e_send.close()
 
 logging_stuff()
