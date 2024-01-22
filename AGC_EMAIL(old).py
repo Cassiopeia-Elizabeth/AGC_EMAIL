@@ -110,27 +110,27 @@ def logging_stuff():
         readout_tx = [tx[i:i + 2] for i in range(0, len(tx), 2)]
         print(data_received_conv)
         if data_received[0:1] == expected_response:
-            log_file.write("AGC: ")
+            log_file.write("ANTENNA: ")
             log_file.write(str(radar))
             log_file.write(" Responded to Packet_sent ok. ")
             if data_received[14:15] == logging_check_two:
                 log_file.write("Recevied 0xFF so All ok ")
                 log_file.write(str(formatted_time))
                 log_file.write("\n")
-                e_send.write("AGC:")
+                e_send.write("ANTENNA:")
                 e_send.write(str(radar))
                 e_send.write(" Working ok ")
                 e_send.write(str(formatted_time))
                 e_send.write("\n")
 
             else:
-                log_file.write("AGC: ")
+                log_file.write("ANTENNA: ")
                 log_file.write(str(radar))
                 log_file.write(" Check Status of Transmitter")
                 log_file.write(str(formatted_time))
                 log_file.write("\n")
 
-                e_send.write("AGC: ")
+                e_send.write("ANTENNA: ")
                 e_send.write(str(radar))
                 e_send.write(" Check Status of Transmitter")
                 e_send.write(str(formatted_time))
@@ -140,13 +140,13 @@ def logging_stuff():
 
         else:
             print("No Response from AGC_TX")
-            log_file.write("AGC: ")
+            log_file.write("ANTENNA: ")
             log_file.write(str(radar))
             log_file.write(" No Response from Transmitter ")
             log_file.write(str(formatted_time))
             log_file.write("\n")
 
-            e_send.write("AGC: ")
+            e_send.write("ANTENNA: ")
             e_send.write(str(radar))
             e_send.write(" No Response from Transmitter ")
             e_send.write(str(formatted_time))
@@ -160,7 +160,7 @@ def logging_stuff():
 
 logging_stuff()
 
-email_send()
+#email_send()
 
 # still to do:
 # actually attach the "e_send.txt" before sending.

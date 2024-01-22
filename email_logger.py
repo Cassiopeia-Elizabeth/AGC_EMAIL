@@ -9,16 +9,16 @@ import time
 import pandas as pd
 import serial
 # Set log file for the email attachment.
-e_send = open(r'error_log.txt', 'a')
+e_send = open(r'/home/radar_test/AGC_EMAIL/error_log.txt', 'a')
 formatted_time = time.strftime("  %d-%m-%Y"   "  %T" "\n")
 formatted_time_log = time.strftime("  %d-%m-%Y"   "  %T ")
 e_send.write("AGC Commander Log file.   Start Time: ")
 e_send.write(str(formatted_time))
 start_time = datetime.now()
 e_send.close()
-radar_position = pd.read_csv("antenna_positions.csv")
-# ser = serial.Serial("/dev/ttyUSB0")
-ser = serial.Serial("COM1")
+radar_position = pd.read_csv("/home/radar_test/AGC_EMAIL/antenna_positions.csv")
+ser = serial.Serial("/dev/ttyUSB0")
+#ser = serial.Serial("COM1")
 ser.baudrate = 9600
 ser.bytesize = 8
 ser.parity = 'N'
@@ -49,7 +49,7 @@ def email_send():
     em['Subject'] = subject
     em.attach(MIMEText(body, "plain"))
 
-    filename = "error_log.txt"
+    filename = "/home/radar_test/AGC_EMAIL/error_log.txt"
     attachment = open(filename, "rb")
     attachment_package = MIMEBase("application", "octet-stream")
     attachment_package.set_payload(attachment.read())
@@ -69,11 +69,11 @@ def email_send():
 
 
 def logging_stuff():
-    e_send = open(r'error_log.txt', 'a')
+    e_send = open(r'/home/radar_test/AGC_EMAIL/error_log.txt', 'a')
     fault_counter = 0
     attempt_counter = 0
 
-    for i in range(2):
+    for i in range(1):
 
         attempt_counter = attempt_counter + 1
         for radar in range(16):
@@ -94,10 +94,10 @@ def logging_stuff():
             # tx = str(tx_read)
             # readout_rx = [rx[i:i + 2] for i in range(0, len(rx), 2)]
             # readout_tx = [tx[i:i + 2] for i in range(0, len(tx), 2)]
-            print(data_received_conv)
+            # print(data_received_conv)
 
             if data_received[0:1] == expected_response:
-                e_send.write("ANT: ")
+                e_send.write("ANTENNA: ")
                 e_send.write(str(radar + 1))
                 e_send.write(" Responded to Packet_sent ok. ")
                 if data_received[14:15] == logging_check_two:
@@ -106,7 +106,7 @@ def logging_stuff():
                     e_send.write("\n")
                 else:
                     fault_counter = fault_counter + 1
-                    e_send.write("ANT: ")
+                    e_send.write("ANTENNA: ")
                     e_send.write(str(radar + 1))
                     e_send.write(" Check Status of Transmitter")
                     e_send.write(str(formatted_time))
@@ -114,19 +114,21 @@ def logging_stuff():
 
             else:
                 fault_counter = fault_counter + 1
-                print("No Response from AGC_TX")
-                e_send.write(f"ANT: ")
+                #print("No Response from AGC_TX")
+                e_send.write(f"ANTENNA: ")
                 e_send.write(str(radar + 1))
                 e_send.write(" No Response from Transmitter ")
                 e_send.write(str(formatted_time))
                 e_send.write("\n")
 
-        if fault_counter > 1:
+        if fault_counter > 0:
             print(fault_counter)
-            email_send()
-
+            #print(attempt_counter)
+            #email_send() #Hash this out if you dont want to get emails while fault finding.
+    e_send.close()
 
 logging_stuff()
+
 
 
 
